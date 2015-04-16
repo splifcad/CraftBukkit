@@ -1,0 +1,59 @@
+--- ../work/decompile-8eb82bde//net/minecraft/server/NBTTagList.java	2015-04-16 22:50:27.960251957 +0100
++++ src/main/java/net/minecraft/server/NBTTagList.java	2015-04-16 22:50:27.960251957 +0100
+@@ -3,6 +3,7 @@
+ import com.google.common.collect.Lists;
+ import java.io.DataInput;
+ import java.io.DataOutput;
++import java.io.IOException;
+ import java.util.Iterator;
+ import java.util.List;
+ import org.apache.logging.log4j.LogManager;
+@@ -23,8 +24,10 @@
+             this.type = 0;
+         }
+ 
++        try { // CraftBukkit
+         dataoutput.writeByte(this.type);
+         dataoutput.writeInt(this.list.size());
++        } catch (Throwable t) { sneakyThrow(t); } // CraftBukkit
+ 
+         for (int i = 0; i < this.list.size(); ++i) {
+             ((NBTBase) this.list.get(i)).write(dataoutput);
+@@ -33,12 +36,14 @@
+     }
+ 
+     void load(DataInput datainput, int i, NBTReadLimiter nbtreadlimiter) {
++        try { // CraftBukkit
+         if (i > 512) {
+             throw new RuntimeException("Tried to read NBT tag with too high complexity, depth > 512");
+         } else {
+             nbtreadlimiter.a(8L);
+             this.type = datainput.readByte();
+             int j = datainput.readInt();
++            nbtreadlimiter.a(j * 8); // CraftBukkit
+ 
+             this.list = Lists.newArrayList();
+ 
+@@ -50,6 +55,7 @@
+             }
+ 
+         }
++        } catch (Throwable t) { sneakyThrow(t); } // CraftBukkit
+     }
+ 
+     public byte getTypeId() {
+@@ -196,4 +202,14 @@
+     public int f() {
+         return this.type;
+     }
++
++    // CraftBukkit start
++    public static void sneakyThrow(Throwable ex) {
++        NBTTagList.<RuntimeException>sneakyThrowInner(ex);
++    }
++
++    public static <T extends Throwable> T sneakyThrowInner(Throwable ex) throws T {
++        throw (T) ex;
++    }
++    // CraftBukkit end
+ }
