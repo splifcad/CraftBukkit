@@ -8,6 +8,22 @@
  
  public class EntityVillager extends EntityAgeable implements IMerchant, NPC {
  
+@@ -13,11 +14,11 @@
+     private MerchantRecipeList br;
+     private int bs;
+     private boolean bt;
+-    private boolean bu;
+-    private int riches;
++    public boolean bu; // PAIL: public, willing
++    public int riches;
+     private String bw;
+-    private int bx;
+-    private int by;
++    public int bx; // PAIL: public, career
++    public int by; // PAIL: public, careerLevel
+     private boolean bz;
+     private boolean bA;
+     public InventorySubcontainer inventory;
 @@ -29,7 +30,7 @@
  
      public EntityVillager(World world, int i) {
